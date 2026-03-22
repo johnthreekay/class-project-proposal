@@ -1,1 +1,3 @@
-# class-project-proposal
+# Class Project Proposal
+
+**Welcome to my class project proposal repository!**
