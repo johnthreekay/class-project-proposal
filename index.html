@@ -14,38 +14,85 @@
             min-height: 100vh;
             background-color: #11111b;
         }
-
         .panel {
             background-color: #181825;
-            border: 1px solid #ddd;
+            border: 1px solid #313244;
             border-radius: 8px;
             padding: 24px 32px;
-            max-width: 600px;
+            max-width: 700px;
             width: 100%;
+            color: #cdd6f4;
         }
-
         .panel h1 {
-            margin: 0 0 16px 0;
+            margin: 0 0 20px 0;
             font-size: 1.5rem;
+            color: #cdd6f4;
         }
-
+        .panel h2 {
+            margin: 24px 0 8px 0;
+            font-size: 1.1rem;
+            color: #89b4fa;
+            border-bottom: 1px solid #313244;
+            padding-bottom: 4px;
+        }
         .panel p {
             margin: 0 0 8px 0;
             line-height: 1.5;
-            color: #333;
+            color: #a6adc8;
         }
-
-        .panel p:last-child {
-            margin-bottom: 0;
+        .panel ul {
+            margin: 4px 0 8px 0;
+            padding-left: 20px;
+            color: #a6adc8;
+            line-height: 1.6;
+        }
+        .panel li {
+            margin-bottom: 2px;
+        }
+        .placeholder {
+            color: #6c7086;
+            font-style: italic;
         }
     </style>
 </head>
 <body>
     <div class="panel">
-        <h1 style="color:white;">Class Project Proposal</h1>
-        <p style="color:white;">John Keslin</p>
-        <p style="color:white;">This will be filled out next sprint!</p>
-        <p style="color:white;">Suppington</p>
+        <h1>Class Project Proposal</h1>
+
+        <h2>Product Name</h2>
+        <p>Suppington</p>
+
+        <h2>Team Members</h2>
+        <p>John Keslin</p>
+
+        <h2>Application Overview</h2>
+        <p class="placeholder">TODO: Describe the application from an end user's perspective.</p>
+
+        <h2>Technology Overview</h2>
+        <p class="placeholder">TODO: Languages, libraries, platforms, and hosting details.</p>
+
+        <h2>Proposal Last Updated</h2>
+        <p class="placeholder">TODO</p>
+
+        <h2>Feature List</h2>
+        <ul>
+            <li class="placeholder">TODO: Prioritized list of features deliverable in the time allowed.</li>
+        </ul>
+
+        <h2>Future Feature List</h2>
+        <ul>
+            <li class="placeholder">TODO: Non-prioritized list of features to implement given more time.</li>
+        </ul>
+
+        <h2>Basic Technical Features</h2>
+        <ul>
+            <li class="placeholder">TODO: Technical features demonstrating things learned in class.</li>
+        </ul>
+
+        <h2>Advanced Technical Features</h2>
+        <ul>
+            <li class="placeholder">TODO: Technical features that go beyond what was covered in class.</li>
+        </ul>
     </div>
 </body>
 </html>
