@@ -26,12 +26,12 @@
         .panel h1 {
             margin: 0 0 20px 0;
             font-size: 1.5rem;
-            color: #cdd6f4;
+            color: #cba6f7;
         }
         .panel h2 {
             margin: 24px 0 8px 0;
             font-size: 1.1rem;
-            color: #89b4fa;
+            color: #cba6f7;
             border-bottom: 1px solid #313244;
             padding-bottom: 4px;
         }
@@ -60,38 +60,63 @@
         <h1>Class Project Proposal</h1>
 
         <h2>Product Name</h2>
-        <p>Suppington</p>
+        <p>Ryokan</p>
 
         <h2>Team Members</h2>
         <p>John Keslin</p>
 
         <h2>Application Overview</h2>
-        <p class="placeholder">TODO: Describe the application from an end user's perspective.</p>
+        <p>Ryokan is a self-hosted anime PVR (Personal Video Recorder) that automates the process of finding, downloading, and importing anime into a Jellyfin media library. Users search for anime by title, and Ryokan pulls metadata from AniList (with MAL via Jikan and Kitsu as fallbacks), then searches Nyaa for available releases. A scoring engine ranks results across nine quality tiers from WEB 480p through BD Remux 1080p, and users can send releases directly to qBittorrent with one click. An RSS auto-sync system monitors for new episodes and quality upgrades automatically.</p>
+        <p>The application tracks a user's anime library with Sonarr-style monitoring modes (all, future, missing, existing, or none) and caches all metadata locally so pages load instantly after initial setup. Ryokan also exposes Sonarr and Radarr v3 API compatibility layers, allowing Seerr to request anime series and movies through it as if it were a native Sonarr/Radarr instance.</p>
+        <p>I built this because Sonarr doesn't work well for anime. Its RSS sync handles currently airing shows fine, but downloading season batches of finished shows almost always hangs the interactive search because Sonarr uses SXEXX-style episode identifiers that don't match how most anime torrents are named.</p>
 
         <h2>Technology Overview</h2>
-        <p class="placeholder">TODO: Languages, libraries, platforms, and hosting details.</p>
+        <p>Rust (language), Axum 0.8 (web framework), Tokio (async runtime), SQLite via sqlx (database, runtime queries), Askama (HTML templating, compiled into the binary), reqwest (HTTP client), scraper (HTML parsing for Nyaa), bcrypt (password hashing), serde/serde_json (serialization). Single CSS file with no frontend build step. Containerized with a multi-stage Dockerfile and Docker Compose, self-hosted on a Linux server behind a Cloudflare Tunnel. CI via GitHub Actions (cargo build + cargo test on pushes/PRs to main).</p>
 
         <h2>Proposal Last Updated</h2>
-        <p class="placeholder">TODO</p>
+        <p>April 12, 2026</p>
 
         <h2>Feature List</h2>
         <ul>
-            <li class="placeholder">TODO: Prioritized list of features deliverable in the time allowed.</li>
+            <li><strong>AniList Search &amp; Metadata with Fallbacks</strong>: Search for anime by title via AniList's GraphQL API. MAL (via Jikan) and Kitsu serve as fallback metadata sources when AniList is unavailable. Detail pages show cover art, synopsis, airing status, episode count, and genres.</li>
+            <li><strong>Nyaa Torrent Search &amp; Scoring</strong>: Scrape Nyaa for available releases and rank them across nine quality tiers (WEB 480p through BD Remux 1080p) using a multi-factor scoring algorithm based on seeders, downloads, file size, trusted status, batch detection, Blu-ray source bonuses, and preferred release groups.</li>
+            <li><strong>qBittorrent Download Integration</strong>: Send torrents to qBittorrent via its Web API with automatic session re-authentication on cookie expiry and one-click grab from search results.</li>
+            <li><strong>RSS Auto-Sync</strong>: Automatic polling for new episodes of tracked series with auto-grab based on quality profile thresholds. Handles quality upgrades when better encodes become available.</li>
+            <li><strong>Library with Monitoring Modes</strong>: Visual cover art grid of tracked anime with Sonarr-style monitoring modes: all, future, missing, existing, or none. Local metadata caching for instant page loads.</li>
+            <li><strong>Seerr Integration</strong>: Sonarr and Radarr v3 API compatibility layers so Seerr can request anime series and movies through Ryokan as if it were a native Sonarr/Radarr instance.</li>
+            <li><strong>Session-Based Authentication</strong>: First-run setup flow to create an admin account. Login with bcrypt-hashed passwords, session tokens stored in SQLite, and auth middleware protecting all routes.</li>
+            <li><strong>Settings &amp; Configuration</strong>: Web UI for configuring external service connections (qBittorrent, Jellyfin), quality profiles and cutoffs, preferred/blocked release groups, media root path, and title language preference.</li>
+            <li><strong>Post-Processing Pipeline</strong>: Moves and renames completed downloads into the media library with Jellyfin library refresh on import. Content-addressed artwork caching.</li>
+            <li><strong>Help System</strong>: In-app help page describing features, service configuration, and a quick-start guide.</li>
         </ul>
 
         <h2>Future Feature List</h2>
         <ul>
-            <li class="placeholder">TODO: Non-prioritized list of features to implement given more time.</li>
+            <li><strong>Source Classification Pipeline</strong>: A multi-layer system for tagging releases by source (BluRay, DVD, Web, HDTV) and resolution, replacing the current filename-only detection. Includes filename token parsing, release group identity tables, Nyaa description scraping, temporal inference from airing status, ffprobe stream analysis of downloaded files, and directory structure scanning for BD-exclusive content like creditless OP/EDs and extras.</li>
+            <li><strong>Post-Download Classification</strong>: Run ffprobe on imported files to classify source from audio codecs (FLAC/TrueHD = BluRay, AAC = Web), subtitle formats (PGS = BluRay), and container metadata. Handles externally-imported libraries as a first-class case.</li>
+            <li><strong>Manual Override &amp; Needs-Review UI</strong>: Users can force-tag any release's source, and a "needs review" list surfaces files where classification signals conflict or are too weak. Manual overrides feed back into the group identity table as suggestions.</li>
+            <li><strong>Per-Series Upgrade Controls</strong>: Toggle quality upgrades on a per-series basis rather than globally.</li>
+            <li><strong>Episode-Level Tracking</strong>: Track individual episode download status per series, detect collection gaps, and search for missing episodes automatically.</li>
+            <li><strong>Notification System</strong>: Discord webhooks for completed downloads, new releases matching tracked series, and failed grabs.</li>
         </ul>
 
         <h2>Basic Technical Features</h2>
         <ul>
-            <li class="placeholder">TODO: Technical features demonstrating things learned in class.</li>
+            <li><strong>HTTP Server &amp; Routing</strong>: Axum web server with route handlers, middleware chains, and static file serving.</li>
+            <li><strong>Server-Side Templating</strong>: Askama templates with base layout inheritance and dynamic data rendering, compiled into the binary.</li>
+            <li><strong>Database CRUD</strong>: SQLite with sqlx for users, sessions, config, library entries, and scheduled task tracking. Idempotent migrations in code.</li>
+            <li><strong>User Authentication &amp; Sessions</strong>: Login/logout with bcrypt hashing, session tokens, cookie auth, and route-gating middleware. First-run setup flow.</li>
+            <li><strong>Form Handling &amp; Validation</strong>: Settings, setup, and configuration pages with server-side input validation and error feedback.</li>
+            <li><strong>Docker Containerization</strong>: Multi-stage Dockerfile (Rust build stage, minimal Debian runtime) and Docker Compose with persistent volumes.</li>
+            <li><strong>CI Pipeline</strong>: GitHub Actions workflow running cargo build and cargo test on pushes and pull requests to main.</li>
         </ul>
 
         <h2>Advanced Technical Features</h2>
         <ul>
-            <li class="placeholder">TODO: Technical features that go beyond what was covered in class.</li>
+            <li><strong>Multi-Source Metadata with Fallback Chain</strong>: AniList GraphQL as the primary metadata provider, with automatic fallback to MAL (via Jikan REST API) and Kitsu when AniList returns errors or rate limits. Three different API formats (GraphQL, REST, JSON:API) unified into a single internal data model.</li>
+            <li><strong>Nyaa HTML Scraping &amp; Scoring Engine</strong>: Scrapes and parses Nyaa search result HTML into structured data. Multi-factor scoring algorithm evaluates seeders, downloads, size, encoding, trusted status, batch detection, BD bonuses, and preferred groups across nine quality tiers to produce composite rankings for automated grab decisions.</li>
+            <li><strong>Sonarr/Radarr v3 API Compatibility Layer</strong>: Implements enough of the Sonarr and Radarr v3 REST APIs that Seerr treats Ryokan as a native instance, enabling anime request workflows through an existing request management UI without any Seerr modifications.</li>
+            <li><strong>Background Task System &amp; Service Integration</strong>: Tokio-spawned background loops for RSS sync, metadata refresh, log cleanup, and post-processing, each reporting status to a scheduled task tracking table. Full qBittorrent Web API integration with automatic session re-authentication on cookie expiry. Jellyfin API integration for library refresh on import.</li>
         </ul>
     </div>
 </body>
